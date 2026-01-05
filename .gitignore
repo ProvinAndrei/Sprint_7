@@ -39,7 +39,6 @@ htmlcov/
 
 # Allure
 allure-results/
-allure-report/
 
 # OS
 .DS_Store
