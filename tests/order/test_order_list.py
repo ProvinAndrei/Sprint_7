@@ -16,7 +16,7 @@ class TestOrderList:
             response_data = response.json()
             assert "orders" in response_data
             assert isinstance(response_data["orders"], list)
-    
+
     @allure.title("Получение списка заказов с параметрами")
     @pytest.mark.parametrize("params", [
         {"limit": 10},
@@ -29,7 +29,7 @@ class TestOrderList:
 
         with allure.step("Проверка успешного ответа"):
             assert response.status_code == 200
-            
+
         with allure.step("Проверка структуры ответа"):
             response_data = response.json()
             assert "orders" in response_data

@@ -1,7 +1,3 @@
-from datetime import datetime, timedelta
-from utils.generators import generate_phone_number, generate_address
-
-
 class TestData:
 
     @staticmethod
@@ -16,14 +12,6 @@ class TestData:
             comment="Доставка самоката",
             color=None
     ):
-        # Генерируем данные, если они не переданы
-        if address is None:
-            address = generate_address()
-        if phone is None:
-            phone = generate_phone_number()
-        if delivery_date is None:
-            delivery_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            
         order_data = {
             "firstName": first_name,
             "lastName": last_name,
@@ -39,11 +27,3 @@ class TestData:
             order_data["color"] = color
 
         return order_data
-    
-    @staticmethod
-    def get_valid_colors():
-        return ["BLACK", "GREY"]
-    
-    @staticmethod
-    def get_metro_stations():
-        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

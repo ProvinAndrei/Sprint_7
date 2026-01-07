@@ -18,15 +18,19 @@ class TestCourierLogin:
             assert "id" in login_response.json()
             assert isinstance(login_response.json()["id"], int)
 
-    @allure.title("Авторизация без обязательного поля: {missing_field}")
-    @pytest.mark.parametrize("missing_field", ["login", "password"])
-    def test_login_missing_required_field(self, courier_api, missing_field):
-        with allure.step(f"Генерация данных без поля {missing_field}"):
-            login = generate_unique_login() if missing_field != "login" else ""
-            password = generate_unique_password() if missing_field != "password" else ""
+    @allure.title("Авторизация без логина")
+    def test_login_without_login(self, courier_api):
+        with allure.step("Отправка запроса без логина"):
+            response = courier_api.login_courier("", "any_password")
 
-        with allure.step("Отправка запроса с неполными данными"):
-            response = courier_api.login_courier(login, password)
+        with allure.step("Проверка ошибки валидации"):
+            assert response.status_code == 400
+            assert response.json() == {"code": 400, "message": "Недостаточно данных для входа"}
+
+    @allure.title("Авторизация без пароля")
+    def test_login_without_password(self, courier_api):
+        with allure.step("Отправка запроса без пароля"):
+            response = courier_api.login_courier("any_login", "")
 
         with allure.step("Проверка ошибки валидации"):
             assert response.status_code == 400

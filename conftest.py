@@ -30,10 +30,13 @@ def registered_courier(courier_api, cleanup_courier):
     password = generate_unique_password()
     first_name = generate_unique_first_name()
     create_response = courier_api.create_courier(login, password, first_name)
-    assert create_response.status_code == 201
+
+    if create_response.status_code != 201:
+        pytest.fail(f"Failed to create courier. Status: {create_response.status_code}, Response: {create_response.text}")
+
     cleanup_courier.append((login, password))
     return {
         "login": login,
         "password": password,
-        "first_name": first_name
+        "firstName": first_name
     }

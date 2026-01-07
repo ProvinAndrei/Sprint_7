@@ -39,16 +39,27 @@ class TestCourierCreation:
             assert response2.status_code == 409
             assert response2.json() == {"code": 409, "message": "Этот логин уже используется. Попробуйте другой."}
 
-    @allure.title("Создание курьера без обязательного поля: {missing_field}")
-    @pytest.mark.parametrize("missing_field", ["login", "password"])
-    def test_create_courier_missing_required_field(self, courier_api, missing_field, cleanup_courier):
-        with allure.step(f"Генерация данных без поля {missing_field}"):
-            login = generate_unique_login() if missing_field != "login" else None
-            password = generate_unique_password() if missing_field != "password" else None
+    @allure.title("Создание курьера без логина")
+    def test_create_courier_without_login(self, courier_api, cleanup_courier):
+        with allure.step("Генерация данных без логина"):
+            password = generate_unique_password()
             first_name = generate_unique_first_name()
 
         with allure.step("Отправка запроса с неполными данными"):
-            response = courier_api.create_courier(login, password, first_name)
+            response = courier_api.create_courier(None, password, first_name)
+
+        with allure.step("Проверка ошибки валидации"):
+            assert response.status_code == 400
+            assert response.json() == {"code": 400, "message": "Недостаточно данных для создания учетной записи"}
+
+    @allure.title("Создание курьера без пароля")
+    def test_create_courier_without_password(self, courier_api, cleanup_courier):
+        with allure.step("Генерация данных без пароля"):
+            login = generate_unique_login()
+            first_name = generate_unique_first_name()
+
+        with allure.step("Отправка запроса с неполными данными"):
+            response = courier_api.create_courier(login, None, first_name)
 
         with allure.step("Проверка ошибки валидации"):
             assert response.status_code == 400
